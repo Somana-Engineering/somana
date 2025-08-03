@@ -64,3 +64,6 @@ coverage.html
 *.sqlite
 *.sqlite3
 data/ 
+
+# Generated files
+internal/generated/ 

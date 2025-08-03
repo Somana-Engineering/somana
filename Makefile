@@ -23,11 +23,12 @@ build: generate
 	@mkdir -p $(BUILD_DIR)
 	$(GOBUILD) -o $(BUILD_DIR)/$(BINARY_NAME) $(MAIN_PATH)
 
-# Clean build artifacts
+# Clean build artifacts and generated files
 clean:
 	@echo "Cleaning..."
 	$(GOCLEAN)
 	@rm -rf $(BUILD_DIR)
+	@rm -rf internal/generated
 
 # Run tests
 test:
@@ -43,9 +44,10 @@ deps:
 # Generate code from OpenAPI spec
 generate:
 	@echo "Generating code from OpenAPI spec..."
+	@mkdir -p internal/generated
 	@if command -v ~/go/bin/oapi-codegen > /dev/null; then \
-		~/go/bin/oapi-codegen -package models -generate types api/openapi.yaml > internal/models/generated.go; \
-		~/go/bin/oapi-codegen -package server -generate types,gin-server api/openapi.yaml > internal/server/generated.go; \
+		~/go/bin/oapi-codegen -package generated -generate types api/openapi.yaml > internal/generated/types.go; \
+		~/go/bin/oapi-codegen -package generated -generate gin-server api/openapi.yaml > internal/generated/server.go; \
 		echo "Code generation complete"; \
 	else \
 		echo "oapi-codegen not found. Install with: go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest"; \
@@ -69,7 +71,7 @@ run: build
 help:
 	@echo "Available targets:"
 	@echo "  build         - Generate code and build the application"
-	@echo "  clean         - Clean build artifacts"
+	@echo "  clean         - Clean build artifacts and generated files"
 	@echo "  test          - Run tests"
 	@echo "  deps          - Install dependencies"
 	@echo "  generate      - Generate code from OpenAPI spec"

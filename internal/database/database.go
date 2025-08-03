@@ -8,7 +8,7 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"github.com/lukewing/somana/internal/models"
+	"github.com/lukewing/somana/internal/generated"
 )
 
 // DB holds the database connection
@@ -43,7 +43,7 @@ func Connect() {
 	}
 
 	// Auto migrate models
-	err = DB.AutoMigrate(&models.Resource{})
+	err = DB.AutoMigrate(&generated.Host{})
 	if err != nil {
 		log.Fatal("Failed to migrate database:", err)
 	}
