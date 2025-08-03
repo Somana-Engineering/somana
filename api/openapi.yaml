@@ -54,12 +54,6 @@ paths:
           schema:
             type: string
             enum: [online, offline, maintenance]
-        - name: environment
-          in: query
-          description: Filter by environment
-          schema:
-            type: string
-            enum: [production, staging, development, testing]
       responses:
         '200':
           description: List of hosts
@@ -68,7 +62,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Host'
+                  $ref: './schemas/host.yaml#/Host'
         '500':
           description: Internal server error
           content:
@@ -86,14 +80,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HostCreateRequest'
+              $ref: './schemas/host.yaml#/HostCreateRequest'
       responses:
         '201':
           description: Host registered successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Host'
+                $ref: './schemas/host.yaml#/Host'
         '400':
           description: Bad request
           content:
@@ -127,7 +121,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Host'
+                $ref: './schemas/host.yaml#/Host'
         '404':
           description: Host not found
           content:
@@ -143,7 +137,7 @@ paths:
 
     put:
       summary: Update host
-      description: Update an existing host
+      description: Update host information
       tags:
         - Hosts
       parameters:
@@ -159,14 +153,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HostUpdateRequest'
+              $ref: './schemas/host.yaml#/HostUpdateRequest'
       responses:
         '200':
           description: Host updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Host'
+                $ref: './schemas/host.yaml#/Host'
         '400':
           description: Bad request
           content:
@@ -188,7 +182,7 @@ paths:
 
     delete:
       summary: Deregister host
-      description: Deregister a host (soft delete)
+      description: Remove a host from the system (soft delete)
       tags:
         - Hosts
       parameters:
@@ -234,14 +228,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HostHeartbeatRequest'
+              $ref: './schemas/host.yaml#/HostHeartbeatRequest'
       responses:
         '200':
           description: Heartbeat updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Host'
+                $ref: './schemas/host.yaml#/Host'
         '404':
           description: Host not found
           content:
@@ -257,132 +251,6 @@ paths:
 
 components:
   schemas:
-    Host:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: Unique identifier for the host
-          example: 1
-        hostname:
-          type: string
-          description: Hostname of the system
-          example: "web-server-01"
-          maxLength: 255
-        ip_address:
-          type: string
-          description: Primary IP address
-          example: "192.168.1.100"
-        os_name:
-          type: string
-          description: Operating system name
-          example: "Ubuntu"
-        os_version:
-          type: string
-          description: Operating system version
-          example: "22.04.3 LTS"
-        environment:
-          type: string
-          description: Environment classification
-          enum: [production, staging, development, testing]
-          example: "production"
-        status:
-          type: string
-          description: Current host status
-          enum: [online, offline, maintenance]
-          example: "online"
-        created_at:
-          type: string
-          format: date-time
-          description: When the host was registered
-          example: "2025-08-03T12:16:39.158615-04:00"
-        updated_at:
-          type: string
-          format: date-time
-          description: When the host was last updated
-          example: "2025-08-03T14:01:28.38132-04:00"
-        deleted_at:
-          type: string
-          format: date-time
-          nullable: true
-          description: When the host was deregistered (soft delete)
-          example: null
-      required:
-        - id
-        - hostname
-        - ip_address
-        - os_name
-        - os_version
-        - environment
-        - status
-        - created_at
-        - updated_at
-
-    HostCreateRequest:
-      type: object
-      properties:
-        hostname:
-          type: string
-          description: Hostname of the system
-          example: "web-server-01"
-          maxLength: 255
-        ip_address:
-          type: string
-          description: Primary IP address
-          example: "192.168.1.100"
-        os_name:
-          type: string
-          description: Operating system name
-          example: "Ubuntu"
-        os_version:
-          type: string
-          description: Operating system version
-          example: "22.04.3 LTS"
-        environment:
-          type: string
-          description: Environment classification
-          enum: [production, staging, development, testing]
-          example: "production"
-      required:
-        - hostname
-        - ip_address
-        - os_name
-        - os_version
-        - environment
-
-    HostUpdateRequest:
-      type: object
-      properties:
-        hostname:
-          type: string
-          description: Hostname of the system
-          example: "web-server-01"
-          maxLength: 255
-        ip_address:
-          type: string
-          description: Primary IP address
-          example: "192.168.1.100"
-        environment:
-          type: string
-          description: Environment classification
-          enum: [production, staging, development, testing]
-          example: "production"
-        status:
-          type: string
-          description: Current host status
-          enum: [online, offline, maintenance]
-          example: "online"
-
-    HostHeartbeatRequest:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Current host status
-          enum: [online, offline, maintenance]
-          example: "online"
-
     Error:
       type: object
       properties:

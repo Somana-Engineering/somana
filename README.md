@@ -51,8 +51,7 @@ somana/
        "hostname": "web-server-01",
        "ip_address": "192.168.1.100",
        "os_name": "Ubuntu",
-       "os_version": "22.04.3 LTS",
-       "environment": "production"
+       "os_version": "22.04.3 LTS"
      }'
    
    # List all hosts
@@ -113,7 +112,7 @@ The generated files are:
 
 ### Host Management
 
-- `GET /api/v1/hosts` - List all hosts (with optional status/environment filters)
+- `GET /api/v1/hosts` - List all hosts (with optional status filter)
 - `POST /api/v1/hosts` - Register a new host
 - `GET /api/v1/hosts/:id` - Get a specific host by ID
 - `PUT /api/v1/hosts/:id` - Update a host
@@ -133,7 +132,6 @@ The Host model includes the following fields:
 - `ip_address` - IP address of the system
 - `os_name` - Operating system name (e.g., "Ubuntu", "CentOS")
 - `os_version` - Operating system version
-- `environment` - Environment (development, staging, production, testing)
 - `status` - Current status (online, offline, maintenance)
 - `created_at` - Registration timestamp
 - `updated_at` - Last update timestamp

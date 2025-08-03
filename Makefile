@@ -12,7 +12,7 @@ GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOMOD=$(GOCMD) mod
 
-.PHONY: all build clean test deps generate run help
+.PHONY: all build clean test deps generate run help publish-openapi
 
 # Default target
 all: clean build
@@ -62,6 +62,11 @@ generate-docs:
 		echo "swag not found. Install with: go install github.com/swaggo/swag/cmd/swag@latest"; \
 	fi
 
+# Publish OpenAPI specification to GitHub releases
+publish-openapi:
+	@echo "Publishing OpenAPI specification..."
+	@./scripts/publish-openapi.sh $(VERSION)
+
 # Run the application
 run: build
 	@echo "Running $(BINARY_NAME)..."
@@ -76,5 +81,6 @@ help:
 	@echo "  deps          - Install dependencies"
 	@echo "  generate      - Generate code from OpenAPI spec"
 	@echo "  generate-docs - Generate Swagger documentation"
+	@echo "  publish-openapi - Publish OpenAPI spec to GitHub releases"
 	@echo "  run           - Generate, build and run the application"
 	@echo "  help          - Show this help" 
