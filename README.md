@@ -1,6 +1,10 @@
 # Somana
 
-An OpenAPI-based Go project with a clean, maintainable structure for building CRUD APIs using Gin and GORM with SQLite.
+An OpenAPI-based Go project for Linux host management with a clean, maintainable structure using Gin, GORM, and SQLite.
+
+## Overview
+
+Somana is a simple host management API that allows you to register, monitor, and manage Linux hosts. It provides a RESTful API for host registration, status updates, and health monitoring.
 
 ## Project Structure
 
@@ -12,12 +16,12 @@ somana/
 │   └── server/            # Main server binary
 ├── internal/              # Private application code
 │   ├── database/          # Database connection and configuration
-│   ├── handlers/          # HTTP request handlers
-│   ├── models/            # GORM data models
+│   ├── generated/         # Generated code from OpenAPI (not in Git)
 │   └── services/          # Business logic
 ├── pkg/                   # Public libraries
 ├── docs/                  # Generated documentation
 ├── data/                  # SQLite database files (auto-created)
+├── bin/                   # Build artifacts (auto-created)
 ├── Makefile              # Build automation
 ├── go.mod                # Go module definition
 └── .gitignore           # Git ignore rules
@@ -30,19 +34,29 @@ somana/
    make deps
    ```
 
-2. **Generate documentation:**
-   ```bash
-   make generate
-   ```
-
-3. **Run the server:**
+2. **Run the server:**
    ```bash
    make run
    ```
 
-4. **Run tests:**
+3. **Test the API:**
    ```bash
-   make test
+   # Health check
+   curl http://localhost:8080/health
+   
+   # Register a host
+   curl -X POST http://localhost:8080/api/v1/hosts \
+     -H "Content-Type: application/json" \
+     -d '{
+       "hostname": "web-server-01",
+       "ip_address": "192.168.1.100",
+       "os_name": "Ubuntu",
+       "os_version": "22.04.3 LTS",
+       "environment": "production"
+     }'
+   
+   # List all hosts
+   curl http://localhost:8080/api/v1/hosts
    ```
 
 ## Development
@@ -50,7 +64,25 @@ somana/
 ### Prerequisites
 
 - Go 1.21+
-- `go-swagger` for code generation (optional)
+- `oapi-codegen` for code generation
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone <repository-url>
+   cd somana
+   ```
+
+2. **Install oapi-codegen:**
+   ```bash
+   go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest
+   ```
+
+3. **Install dependencies:**
+   ```bash
+   make deps
+   ```
 
 ### Database Setup
 
@@ -65,7 +97,7 @@ export DB_PATH=/path/to/your/database.db
 
 ### Code Generation
 
-This project uses OpenAPI code generation to maintain consistency between the API specification and the Go codebase.
+This project uses OpenAPI code generation to maintain consistency between the API specification and the Go codebase. The generated code is stored in `internal/generated/` and is automatically cleaned and regenerated during the build process.
 
 To regenerate code after updating the OpenAPI spec:
 
@@ -73,36 +105,64 @@ To regenerate code after updating the OpenAPI spec:
 make generate
 ```
 
-### API Documentation
-
-API documentation is automatically generated from the OpenAPI specification and available at:
-
-- Swagger UI: `http://localhost:8080/swagger/`
-- OpenAPI JSON: `http://localhost:8080/openapi.json`
+The generated files are:
+- `internal/generated/types.go` - Generated Go types from OpenAPI schemas
+- `internal/generated/server.go` - Generated server interfaces and handlers
 
 ## API Endpoints
 
-### Resources
+### Host Management
 
-- `GET /api/v1/resources` - Get all resources
-- `POST /api/v1/resources` - Create a new resource
-- `GET /api/v1/resources/:id` - Get a resource by ID
-- `PUT /api/v1/resources/:id` - Update a resource
-- `DELETE /api/v1/resources/:id` - Delete a resource
-- `GET /api/v1/resources/active` - Get active resources only
+- `GET /api/v1/hosts` - List all hosts (with optional status/environment filters)
+- `POST /api/v1/hosts` - Register a new host
+- `GET /api/v1/hosts/:id` - Get a specific host by ID
+- `PUT /api/v1/hosts/:id` - Update a host
+- `DELETE /api/v1/hosts/:id` - Deregister a host
+- `POST /api/v1/hosts/:id/heartbeat` - Update host status/heartbeat
 
 ### Health Check
 
 - `GET /health` - Health check endpoint
 
-## Adding New Resources
+## Host Model
 
-1. **Define your resource in `api/openapi.yaml`**
-2. **Create corresponding GORM model in `internal/models/`**
-3. **Create service logic in `internal/services/`**
-4. **Create handlers in `internal/handlers/`**
-5. **Register routes in `cmd/server/main.go`**
-6. **Add model to database migration in `internal/database/database.go`**
+The Host model includes the following fields:
+
+- `id` - Unique identifier (auto-generated)
+- `hostname` - Hostname of the system
+- `ip_address` - IP address of the system
+- `os_name` - Operating system name (e.g., "Ubuntu", "CentOS")
+- `os_version` - Operating system version
+- `environment` - Environment (development, staging, production, testing)
+- `status` - Current status (online, offline, maintenance)
+- `created_at` - Registration timestamp
+- `updated_at` - Last update timestamp
+- `deleted_at` - Soft delete timestamp (nullable)
+
+## Available Commands
+
+- `make deps` - Install dependencies
+- `make generate` - Generate code from OpenAPI spec
+- `make build` - Build the application (includes code generation)
+- `make run` - Build and run the application
+- `make test` - Run tests
+- `make clean` - Clean build artifacts and generated files
+
+## Adding New Features
+
+1. **Update the OpenAPI specification** in `api/openapi.yaml`
+2. **Implement the business logic** in `internal/services/`
+3. **The generated code will automatically update** when you run `make build`
+
+## Architecture
+
+This project follows a clean architecture pattern:
+
+- **OpenAPI Specification** (`api/openapi.yaml`) - Single source of truth for API definition
+- **Generated Code** (`internal/generated/`) - Types and interfaces generated from OpenAPI
+- **Business Logic** (`internal/services/`) - Implementation of the generated interfaces
+- **Database Layer** (`internal/database/`) - Database connection and setup
+- **Application Entry** (`cmd/server/`) - Main application entry point
 
 ## Contributing
 
