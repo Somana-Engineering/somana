@@ -1,0 +1,78 @@
+# Makefile for Somana Go project
+
+# Variables
+BINARY_NAME=somana
+BUILD_DIR=bin
+MAIN_PATH=./cmd/server
+
+# Go parameters
+GOCMD=go
+GOBUILD=$(GOCMD) build
+GOCLEAN=$(GOCMD) clean
+GOTEST=$(GOCMD) test
+GOMOD=$(GOCMD) mod
+
+.PHONY: all build clean test deps generate run help
+
+# Default target
+all: clean build
+
+# Build the application (includes code generation)
+build: generate
+	@echo "Building $(BINARY_NAME)..."
+	@mkdir -p $(BUILD_DIR)
+	$(GOBUILD) -o $(BUILD_DIR)/$(BINARY_NAME) $(MAIN_PATH)
+
+# Clean build artifacts
+clean:
+	@echo "Cleaning..."
+	$(GOCLEAN)
+	@rm -rf $(BUILD_DIR)
+
+# Run tests
+test:
+	@echo "Running tests..."
+	$(GOTEST) -v ./...
+
+# Install dependencies
+deps:
+	@echo "Installing dependencies..."
+	$(GOMOD) tidy
+	$(GOMOD) download
+
+# Generate code from OpenAPI spec
+generate:
+	@echo "Generating code from OpenAPI spec..."
+	@if command -v ~/go/bin/oapi-codegen > /dev/null; then \
+		~/go/bin/oapi-codegen -package models -generate types api/openapi.yaml > internal/models/generated.go; \
+		~/go/bin/oapi-codegen -package server -generate types,gin-server api/openapi.yaml > internal/server/generated.go; \
+		echo "Code generation complete"; \
+	else \
+		echo "oapi-codegen not found. Install with: go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest"; \
+	fi
+
+# Generate Swagger documentation
+generate-docs:
+	@echo "Generating Swagger documentation..."
+	@if command -v swag > /dev/null; then \
+		swag init -g $(MAIN_PATH)/main.go -o ./docs; \
+	else \
+		echo "swag not found. Install with: go install github.com/swaggo/swag/cmd/swag@latest"; \
+	fi
+
+# Run the application
+run: build
+	@echo "Running $(BINARY_NAME)..."
+	./$(BUILD_DIR)/$(BINARY_NAME)
+
+# Show help
+help:
+	@echo "Available targets:"
+	@echo "  build         - Generate code and build the application"
+	@echo "  clean         - Clean build artifacts"
+	@echo "  test          - Run tests"
+	@echo "  deps          - Install dependencies"
+	@echo "  generate      - Generate code from OpenAPI spec"
+	@echo "  generate-docs - Generate Swagger documentation"
+	@echo "  run           - Generate, build and run the application"
+	@echo "  help          - Show this help" 
