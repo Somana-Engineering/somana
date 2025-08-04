@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Somana API
   version: 1.0.0
-  description: API for managing Linux hosts in the Somana system
+  description: API for managing hosts in the Somana system
   contact:
     name: API Support
     email: support@somana.com
@@ -13,8 +13,8 @@ info:
 servers:
   - url: http://localhost:8080
     description: Development server
-  - url: https://api.somana.com
-    description: Production server
+  - url: http://somana-dev-a227f864a3ec.herokuapp.com
+    description: Staging server
 
 paths:
   /health:
