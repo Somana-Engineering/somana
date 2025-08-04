@@ -1,0 +1,6 @@
+build:
+  packages:
+    - build-essential
+  scripts:
+    - make generate
+    - make build 
