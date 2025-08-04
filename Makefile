@@ -45,15 +45,15 @@ deps:
 generate:
 	@echo "Generating code from OpenAPI spec..."
 	@mkdir -p internal/generated
-	@if command -v oapi-codegen > /dev/null; then \
-		oapi-codegen -package generated -generate types api/openapi.yaml > internal/generated/types.go; \
-		oapi-codegen -package generated -generate gin-server api/openapi.yaml > internal/generated/server.go; \
+	@if command -v ~/go/bin/oapi-codegen > /dev/null; then \
+		~/go/bin/oapi-codegen -package generated -generate types api/openapi.yaml > internal/generated/types.go; \
+		~/go/bin/oapi-codegen -package generated -generate gin-server api/openapi.yaml > internal/generated/server.go; \
 		echo "Code generation complete"; \
 	else \
 		echo "Installing oapi-codegen..."; \
 		go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest; \
-		oapi-codegen -package generated -generate types api/openapi.yaml > internal/generated/types.go; \
-		oapi-codegen -package generated -generate gin-server api/openapi.yaml > internal/generated/server.go; \
+		~/go/bin/oapi-codegen -package generated -generate types api/openapi.yaml > internal/generated/types.go; \
+		~/go/bin/oapi-codegen -package generated -generate gin-server api/openapi.yaml > internal/generated/server.go; \
 		echo "Code generation complete"; \
 	fi
 

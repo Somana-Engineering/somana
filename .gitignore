@@ -66,4 +66,4 @@ coverage.html
 data/ 
 
 # Generated files
-internal/generated/ 
+# internal/generated/ 
