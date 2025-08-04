@@ -36,11 +36,6 @@ func (s *HostService) GetApiV1Hosts(c *gin.Context, params generated.GetApiV1Hos
 		query = query.Where("status = ?", string(*params.Status))
 	}
 
-	// Apply environment filter if provided
-	if params.Environment != nil {
-		query = query.Where("environment = ?", string(*params.Environment))
-	}
-
 	result := query.Find(&hosts)
 	if result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
@@ -59,14 +54,13 @@ func (s *HostService) PostApiV1Hosts(c *gin.Context) {
 	}
 
 	host := &generated.Host{
-		Hostname:    req.Hostname,
-		IpAddress:   req.IpAddress,
-		OsName:      req.OsName,
-		OsVersion:   req.OsVersion,
-		Environment: generated.HostEnvironment(req.Environment),
-		Status:      generated.HostStatusOnline, // Default status
-		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Now(),
+		Hostname:  req.Hostname,
+		IpAddress: req.IpAddress,
+		OsName:    req.OsName,
+		OsVersion: req.OsVersion,
+		Status:    generated.HostStatusOnline, // Default status
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
 	}
 
 	result := database.DB.Create(host)
@@ -112,9 +106,6 @@ func (s *HostService) PutApiV1HostsId(c *gin.Context, id int) {
 	if req.IpAddress != nil {
 		host.IpAddress = *req.IpAddress
 	}
-	if req.Environment != nil {
-		host.Environment = generated.HostEnvironment(*req.Environment)
-	}
 	if req.Status != nil {
 		host.Status = generated.HostStatus(*req.Status)
 	}
@@ -139,16 +130,17 @@ func (s *HostService) DeleteApiV1HostsId(c *gin.Context, id int) {
 		return
 	}
 
+	// Hard delete - remove from database
 	result = database.DB.Delete(&host)
 	if result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
 		return
 	}
 
-	c.Status(http.StatusNoContent)
+	c.JSON(http.StatusNoContent, nil)
 }
 
-// PostApiV1HostsIdHeartbeat implements the host heartbeat endpoint
+// PostApiV1HostsIdHeartbeat implements the heartbeat endpoint
 func (s *HostService) PostApiV1HostsIdHeartbeat(c *gin.Context, id int) {
 	var req generated.HostHeartbeatRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -163,11 +155,10 @@ func (s *HostService) PostApiV1HostsIdHeartbeat(c *gin.Context, id int) {
 		return
 	}
 
-	// Update status if provided
+	// Update status and timestamp
 	if req.Status != nil {
-		host.Status = generated.HostStatus(*req.Status)
+		host.Status = generated.HostStatus(string(*req.Status))
 	}
-
 	host.UpdatedAt = time.Now()
 
 	result = database.DB.Save(&host)
