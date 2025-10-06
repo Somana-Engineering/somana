@@ -74,12 +74,9 @@ Downloads:
 - macOS Apple Silicon: somana-darwin-arm64
 
 Installation:
-\`\`\`bash
-# Linux AMD64
 curl -L https://github.com/lukewing/somana/releases/download/$VERSION/somana-linux-amd64 -o somana
 chmod +x somana
 ./somana
-\`\`\`
 
 API Documentation:
 - OpenAPI Spec: Download from releases
