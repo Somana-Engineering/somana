@@ -65,54 +65,26 @@ jobs:
             bin/somana-darwin-amd64 \
             bin/somana-darwin-arm64 \
             --title "Somana $VERSION" \
-            --notes "## Somana $VERSION
+            --notes "Somana $VERSION
 
-### Downloads
+Downloads:
+- Linux AMD64: somana-linux-amd64
+- Linux ARM64: somana-linux-arm64  
+- macOS Intel: somana-darwin-amd64
+- macOS Apple Silicon: somana-darwin-arm64
 
-#### Linux
-- **AMD64**: [somana-linux-amd64](https://github.com/lukewing/somana/releases/download/$VERSION/somana-linux-amd64)
-- **ARM64**: [somana-linux-arm64](https://github.com/lukewing/somana/releases/download/$VERSION/somana-linux-arm64)
-
-#### macOS
-- **Intel**: [somana-darwin-amd64](https://github.com/lukewing/somana/releases/download/$VERSION/somana-darwin-amd64)
-- **Apple Silicon**: [somana-darwin-arm64](https://github.com/lukewing/somana/releases/download/$VERSION/somana-darwin-arm64)
-
-
-### Installation
-
-#### Linux AMD64
+Installation:
 \`\`\`bash
+# Linux AMD64
 curl -L https://github.com/lukewing/somana/releases/download/$VERSION/somana-linux-amd64 -o somana
 chmod +x somana
 ./somana
 \`\`\`
 
-#### Linux ARM64
-\`\`\`bash
-curl -L https://github.com/lukewing/somana/releases/download/$VERSION/somana-linux-arm64 -o somana
-chmod +x somana
-./somana
-\`\`\`
+API Documentation:
+- OpenAPI Spec: Download from releases
 
-#### macOS (Intel)
-\`\`\`bash
-curl -L https://github.com/lukewing/somana/releases/download/$VERSION/somana-darwin-amd64 -o somana
-chmod +x somana
-./somana
-\`\`\`
-
-#### macOS (Apple Silicon)
-\`\`\`bash
-curl -L https://github.com/lukewing/somana/releases/download/$VERSION/somana-darwin-arm64 -o somana
-chmod +x somana
-./somana
-\`\`\`
-
-
-### API Documentation
-- OpenAPI Spec: [Download](https://github.com/lukewing/somana/releases/download/$VERSION/openapi.yaml)
-
-### Changes
+Changes:
 - Built and tested on CircleCI
 - Multi-architecture support (Linux, macOS)
 - Automated release process"
