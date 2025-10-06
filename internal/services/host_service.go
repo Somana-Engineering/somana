@@ -21,7 +21,7 @@ func NewHostService() *HostService {
 func (s *HostService) GetHealth(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":  "ok",
-		"message": "Somana API is running smoothly in the cloud! 🚀",
+		"message": "Somana API is running smoothly with CircleCI auto-releases! 🚀",
 		"version": "1.0.0",
 	})
 }
