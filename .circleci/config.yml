@@ -36,7 +36,10 @@ jobs:
           sudo apt update
           sudo apt install gh -y
           # Authenticate GitHub CLI with token
+          echo "Authenticating GitHub CLI..."
           echo "$GITHUB_TOKEN" | gh auth login --with-token
+          echo "GitHub CLI authentication status:"
+          gh auth status
       - run: |
           # Auto-increment version based on commit count
           COMMIT_COUNT=$(git rev-list --count HEAD)
@@ -44,6 +47,7 @@ jobs:
           echo "Using auto-incremented version: $VERSION"
           
           # Publish OpenAPI spec with the same version
+          echo "Publishing OpenAPI spec with version: $VERSION"
           make publish-openapi VERSION=$VERSION
           
           # Create GitHub release with all binaries
