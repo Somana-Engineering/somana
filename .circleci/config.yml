@@ -39,13 +39,10 @@ jobs:
           VERSION="v1.0.$COMMIT_COUNT"
           echo "Using auto-incremented version: $VERSION"
           
-          # Publish OpenAPI spec with the same version
-          echo "Publishing OpenAPI spec with version: $VERSION"
-          make publish-openapi VERSION=$VERSION
-          
-          # Create GitHub release with all binaries
+          # Create GitHub release with OpenAPI spec and binaries
           echo "Creating GitHub release with version: $VERSION"
           gh release create $VERSION \
+            api/openapi.yaml \
             bin/somana-linux-amd64 \
             bin/somana-linux-arm64 \
             bin/somana-darwin-amd64 \
