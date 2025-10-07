@@ -40,11 +40,8 @@ jobs:
           echo "GITHUB_TOKEN length: ${#GITHUB_TOKEN}"
           echo "GITHUB_TOKEN first 10 chars: ${GITHUB_TOKEN:0:10}..."
           
-          # Authenticate GitHub CLI
-          echo "Authenticating GitHub CLI..."
-          echo "$GITHUB_TOKEN" | gh auth login --with-token
-          echo "GitHub CLI authentication status:"
-          gh auth status
+          # GitHub CLI should automatically use GITHUB_TOKEN env var
+          echo "GitHub CLI should be authenticated via GITHUB_TOKEN env var"
           
           # Test basic GitHub CLI functionality
           echo "Testing GitHub CLI..."
