@@ -1,22 +1,7 @@
 version: 2.1
 
 jobs:
-  build:
-    machine:
-      image: ubuntu-2004:current
-    steps:
-      - checkout
-      - run: |
-          curl -L https://go.dev/dl/go1.23.0.linux-amd64.tar.gz | sudo tar -xzC /usr/local
-          echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
-          source ~/.bashrc
-      - run: go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest
-      - run: make build
-      - store_artifacts:
-          path: bin/somana
-          destination: binary
-
-  publish:
+  build-and-publish:
     machine:
       image: ubuntu-2004:current
     environment:
@@ -41,7 +26,6 @@ jobs:
           
           echo "Building for macOS ARM64 (Apple Silicon)..."
           GOOS=darwin GOARCH=arm64 go build -o bin/somana-darwin-arm64 ./cmd/server
-          
           
           echo "Build complete! Binaries:"
           ls -la bin/
@@ -73,8 +57,7 @@ workflows:
   version: 2
   build-and-publish:
     jobs:
-      - build
-      - publish:
+      - build-and-publish:
           filters:
             branches:
               only: main
