@@ -4,8 +4,6 @@ jobs:
   build-and-publish:
     machine:
       image: ubuntu-2004:current
-    environment:
-      GITHUB_TOKEN: $GITHUB_TOKEN
     steps:
       - checkout
       - run: |
