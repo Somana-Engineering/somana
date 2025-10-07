@@ -65,26 +65,7 @@ jobs:
             bin/somana-darwin-amd64 \
             bin/somana-darwin-arm64 \
             --title "Somana $VERSION" \
-            --notes "Somana $VERSION
-
-Downloads:
-- Linux AMD64: somana-linux-amd64
-- Linux ARM64: somana-linux-arm64  
-- macOS Intel: somana-darwin-amd64
-- macOS Apple Silicon: somana-darwin-arm64
-
-Installation:
-curl -L https://github.com/lukewing/somana/releases/download/$VERSION/somana-linux-amd64 -o somana
-chmod +x somana
-./somana
-
-API Documentation:
-- OpenAPI Spec: Download from releases
-
-Changes:
-- Built and tested on CircleCI
-- Multi-architecture support (Linux, macOS)
-- Automated release process"
+            --notes "Somana $VERSION - Built and tested on CircleCI with multi-architecture support for Linux and macOS"
         environment:
           GITHUB_TOKEN: $GITHUB_TOKEN
 
