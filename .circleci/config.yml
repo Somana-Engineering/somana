@@ -19,6 +19,8 @@ jobs:
   publish:
     machine:
       image: ubuntu-2004:202010-01
+    environment:
+      GITHUB_TOKEN: $GITHUB_TOKEN
     steps:
       - checkout
       - run: |
@@ -66,8 +68,6 @@ jobs:
             bin/somana-darwin-arm64 \
             --title "Somana $VERSION" \
             --notes "Somana $VERSION - Built and tested on CircleCI with multi-architecture support for Linux and macOS"
-        environment:
-          GITHUB_TOKEN: $GITHUB_TOKEN
 
 workflows:
   version: 2
